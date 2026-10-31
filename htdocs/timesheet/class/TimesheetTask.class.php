@@ -1365,9 +1365,9 @@ class TimesheetTask extends Task
             if (($this->timespent_duration >0 && $this->timespent_old_duration!=$this->timespent_duration )|| $daynote_old!=$daynote && (!empty($daynote) || $this->timespent_duration >0)) {
                     dol_syslog(__METHOD__."  taskTimeUpdate", LOG_DEBUG);
                     if ($this->updateTimeSpent($Submitter, 0) >= 0) {
-                        $resArray['timeSpendModified']++;
+                        $resArray['timeSpendModified'] = ($resArray['timeSpendModified'] ?? 0) + 1;
                     }else {
-                        $resArray['updateError']++;
+                        $resArray['updateError'] = ($resArray['updateError'] ?? 0) + 1;
                     }
                 
             } else if($this->timespent_duration == 0 && empty($daynote) ) {
@@ -1375,10 +1375,10 @@ class TimesheetTask extends Task
 
                     dol_syslog(__METHOD__."  taskTimeDelete", LOG_DEBUG);
                     if ($this->delTimeSpent($Submitter, 0) >= 0) {
-                        $resArray['timeSpendDeleted']++;
+                        $resArray['timeSpendDeleted'] = ($resArray['timeSpendDeleted'] ?? 0) + 1;
                         $this->tasklist[$dayKey]['id'] = 0;
                     } else {
-                        $resArray['updateError']++;
+                        $resArray['updateError'] = ($resArray['updateError'] ?? 0) + 1;
                     }
             }
         } elseif ($duration>0 || $daynote!='') {
@@ -1397,10 +1397,10 @@ class TimesheetTask extends Task
             $newId = $this->addTimeSpent($Submitter, 0);
             if ($newId >= 0) {
 
-                $resArray['timeSpendCreated']++;
+                $resArray['timeSpendCreated'] = ($resArray['timeSpendCreated'] ?? 0) + 1;
                 $this->tasklist[$dayKey]['id'] = $newId;
             } else {
-                $resArray['updateError']++;
+                $resArray['updateError'] = ($resArray['updateError'] ?? 0) + 1;
             }
         }
         //update the task list

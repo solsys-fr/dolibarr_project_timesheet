@@ -58,6 +58,8 @@ class Stopwatch {
        //this.reset();
        if ( typeof data.event_type !== 'undefined'){
         this.event =data;
+        // no active event: the server returns event_type = null, treat it as stopped
+        if (this.event.event_type === null || this.event.event_type === '') this.event.event_type = 0;
 
 
         //var date_now.setTime(performance.now());

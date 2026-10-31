@@ -641,7 +641,7 @@ function ajaxprogress($user, $json)
     if (!empty($json)) {
         $object = json_decode($json);
         if ($object == false || !($object->taskid > 0)){
-            $arrayRes['updateError'] ++;
+            $arrayRes['updateError'] = ($arrayRes['updateError'] ?? 0) + 1;
         }else{
             $task->fetch($object->taskid);
             if ($object->progress == '' ||$object->progress == -1){
@@ -651,15 +651,15 @@ function ajaxprogress($user, $json)
                 $task->progress = $object->progress;
                 $res = $task->update($user);
                 if ($res){
-                    $arrayRes['ProgressUpdate'] ++;
+                    $arrayRes['ProgressUpdate'] = ($arrayRes['ProgressUpdate'] ?? 0) + 1;
                 }else{
-                    $arrayRes['updateError'] ++;
+                    $arrayRes['updateError'] = ($arrayRes['updateError'] ?? 0) + 1;
                 }
             }
         }
         if (count($arrayRes)) $object->status = TimesheetsetEventMessage($arrayRes, true);
     }else{
-        $arrayRes['updateError'] ++;
+        $arrayRes['updateError'] = ($arrayRes['updateError'] ?? 0) + 1;
         $object['status'] = TimesheetsetEventMessage($arrayRes, true);
     }
     return json_encode($object);

@@ -178,7 +178,7 @@ function removeUnchanged(){
             if (changed==0){
                 task[i].parentNode.removeChild(task[i]);
                 i--;
-                nbUser--;
+                nbTask--;
             }
         }
         

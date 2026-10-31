@@ -635,13 +635,13 @@ public $date_time_event_start;
 			if (empty($tokenDb)) {  // 00 01 no db record found by token or user
 				$this->initAsSpecimen();
 				if (!$auto){
-					$arrayRes["NoActiveEvent"]++ ;
+					$arrayRes["NoActiveEvent"] = ($arrayRes["NoActiveEvent"] ?? 0) + 1 ;
 					$this->status = TimesheetsetEventMessage($arrayRes, true);
 				}
 				// AUTO START ?
 			} elseif ($this->event_type >= EVENT_STOP) { // found but already stopped
 				$this->initAsSpecimen();
-				$arrayRes["EventNotActive"]++;
+				$arrayRes["EventNotActive"] = ($arrayRes["EventNotActive"] ?? 0) + 1;
 				$this->status = TimesheetsetEventMessage($arrayRes, true);
 			} else{// 11 && 10 found and active
 				if (!empty($tokenJson)) { //11
@@ -678,7 +678,7 @@ public $date_time_event_start;
 		if ($ret<0) {
 			$this->initAsSpecimen();
 			$arrayRes = array();
-			$this->status = $arrayRes["DbError"]++ ;
+			$arrayRes["DbError"] = 1;
 			$this->status = TimesheetsetEventMessage($arrayRes, true);
 		}
 
@@ -714,10 +714,10 @@ public $date_time_event_start;
 			{
 				//00
 				$this->initAsSpecimen();
-				if ($this->userid)$arrayRes["NoActiveEvent"]++ ;
+				if ($this->userid)$arrayRes["NoActiveEvent"] = ($arrayRes["NoActiveEvent"] ?? 0) + 1 ;
 				$this->status = TimesheetsetEventMessage($arrayRes, true);
 			} elseif (empty($tokenDb) && !empty($tokenJson)) { // json recieved with token //01
-				$arrayRes["EventNotActive"]++;
+				$arrayRes["EventNotActive"] = ($arrayRes["EventNotActive"] ?? 0) + 1;
 				$this->status = TimesheetsetEventMessage($arrayRes, true);
 			} elseif (!empty($tokenDb)) {
 				// 11 && 10
