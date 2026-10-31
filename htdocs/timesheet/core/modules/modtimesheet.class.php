@@ -560,16 +560,18 @@ class modTimesheet extends DolibarrModules
             dolibarr_set_const($db, "TIMESHEET_VERSION", $this->version, 'chaine', 0, '', $conf->entity);
             include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
             $extrafields = new ExtraFields($this->db);
+            // Since Dolibarr 20 the filter of a sellist extrafield must use the Universal Search Filter syntax
+            $serviceFilter = 'product:ref|label:rowid::(tosell:=:1) AND (fk_product_type:=:1)';
             // add the "Default server" select list to the user
-            $extrafields->addExtraField('fk_service', "DefaultService", 'sellist', 1, '', 'user', 0, 0, '', array('options' => array("product:ref|label:rowid::tosell='1' AND fk_product_type='1'" => 'N')), 1, 1, 3, 0, '', 0, 'timesheet@ptimesheet', '$conf->timesheet->enabled');
+            $extrafields->addExtraField('fk_service', "DefaultService", 'sellist', 1, '', 'user', 0, 0, '', array('options' => array($serviceFilter => 'N')), 1, 1, 3, 0, '', 0, 'timesheet@timesheet', 'isModEnabled("timesheet")');
             // add the "Default server" select list to the task
-            $extrafields->addExtraField('fk_service', "DefaultService", 'sellist', 1, '', 'projet_task', 0, 0, '', array('options' => array("product:ref|label:rowid::tosell='1' AND fk_product_type='1'" => 'N')), 1, 1, 3, 0, '', 0, 'timesheet@ptimesheet', '$conf->timesheet->enabled');
+            $extrafields->addExtraField('fk_service', "DefaultService", 'sellist', 1, '', 'projet_task', 0, 0, '', array('options' => array($serviceFilter => 'N')), 1, 1, 3, 0, '', 0, 'timesheet@timesheet', 'isModEnabled("timesheet")');
             // allow ext id of 32 char
             // $extrafields->addExtraField('external_id', "ExternalId", 'varchar', 100, 32, 'user', 1, 0, '', '', 1, '$user->rights->timesheet->AttendanceAdmin', 3, 'specify the id of the external system', '', 0, 'timesheet@ptimesheet', '$conf->global->ATTENDANCE_EXT_SYSTEM');
             // add the "invoicable" bool to the task
             if (version_compare(DOL_VERSION, 21, '<')) {
                 // Dolibarr Version < 21
-                $extrafields->addExtraField('invoiceable', "Invoiceable", 'boolean', 1, '', 'projet_task', 0, 0, '', '', 1, 1, 1, 0, '', 0, 'timesheet@timesheet', '$conf->timesheet->enabled');
+                $extrafields->addExtraField('invoiceable', "Invoiceable", 'boolean', 1, '', 'projet_task', 0, 0, '', '', 1, 1, 1, 0, '', 0, 'timesheet@timesheet', 'isModEnabled("timesheet")');
             } else {
                 // Dolibarr Version >= 21
                 // Check if invoiceable column exists before migration
@@ -593,6 +595,10 @@ class modTimesheet extends DolibarrModules
                     $sql[4] = "UPDATE ".MAIN_DB_PREFIX."extrafields SET enabled = 'false' WHERE name='invoiceable'";
                 }
             }
+            // migrate the filter of the extrafields created by older versions of the module (must stay the last
+            // entry: _init() iterates on sequential keys)
+            $sql[] = "UPDATE ".MAIN_DB_PREFIX."extrafields SET param = '".$db->escape(serialize(array('options' => array($serviceFilter => 'N'))))."'"
+                ." WHERE name = 'fk_service' AND elementtype IN ('user', 'projet_task') AND param LIKE '%tosell=%'";
             return $this->_init($sql, $options);
         }
         /**
