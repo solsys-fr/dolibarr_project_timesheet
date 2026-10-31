@@ -60,7 +60,7 @@ $dateEndmonth = GETPOST('dateEndmonth', 'int');
 $dateEndyear = GETPOST('dateEndyear', 'int');
 $dateEnd = parseDate($dateEndday, $dateEndmonth, $dateEndyear, $dateEnd);
 $invoicabletaskOnly = GETPOST('invoicabletaskOnly', 'int');
-if ($user->rights->facture->creer && hasProjectRight($userid, $projectId)) {
+if ($user->hasRight('facture', 'creer') && hasProjectRight($userid, $projectId)) {
     if ($projectId>0)$staticProject->fetch($projectId);
     if ($socid == 0 || !is_numeric($socid))$socid = $staticProject->socid;
 $edit = 1;
@@ -222,7 +222,7 @@ $DOL_VERSION_SUP_21 = version_compare(DOL_VERSION, '21', '>=');
                 $propal->fetch_lines();
                 foreach($propal->lines as $lid => $line){
                     $label = (!empty($line->label) ? $line->label : '');
-					$desc = (!empty($line->desc) ? $line->desc : $line->libelle);
+					$desc = (!empty($line->desc) ? $line->desc : $line->label);
                     $lineCount ++; 
                     $product_type = ($line->product_type ? $line->product_type : 0);
                     // Date start
@@ -273,7 +273,7 @@ $DOL_VERSION_SUP_21 = version_compare(DOL_VERSION, '21', '>=');
                     $result = 0;
                     $postdata['prod_entry_mode'] = 'predef';
                     $postdata['dp_desc'] = $desc;
-                    $postdata['tva_tx'] = $$tva_tx;
+                    $postdata['tva_tx'] = $tva_tx;
                     $postdata['price_ht'] =$line->total_ht;
                     $postdata['qty'] = (float) $line->qty;                      
                     if (!getConf('TIMESHEET_EVAL_ADDLINE')){
@@ -523,11 +523,11 @@ $DOL_VERSION_SUP_21 = version_compare(DOL_VERSION, '21', '>=');
             $Form .= '<tr class = "oddeven"><th align = "left" width = "80%">'
                 .$langs->trans('DateStart').'</th>';
             $Form .= '<th align = "left" width = "80%">'
-                .$form->select_date($dateStart, 'startDate', 0, 0, 0, "", 1, 1, 1)."</th></tr>";
+                .$form->selectDate($dateStart, 'startDate', 0, 0, 0, "", 1, 1)."</th></tr>";
             $Form .= '<tr class = "oddeven"><th align = "left" width = "80%">'
                 .$langs->trans('DateEnd').'</th>';
             $Form .= '<th align = "left" width = "80%">'
-                .$form->select_date($dateEnd, 'dateEnd', 0, 0, 0, "", 1, 1, 1)."</th></tr>";
+                .$form->selectDate($dateEnd, 'dateEnd', 0, 0, 0, "", 1, 1)."</th></tr>";
             $Form .= '<tr class = "oddeven"><th align = "left" width = "80%">'
                 .$langs->trans('invoicingMethod').'</th><th align = "left"><input type = "radio" '
                 .'name = "invoicingMethod" value = "task" ';

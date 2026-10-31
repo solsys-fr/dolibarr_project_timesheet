@@ -1084,7 +1084,7 @@ public function getHTMLNavigation($optioncss, $token, $ajax = false)
     $token = getToken();
     $Nav .= '<input type = "hidden" id="csrf-token" name = "token" value = "'.$token.'"/>';
 
-    $Nav .= $langs->trans("GoTo").': '.$form->select_date(-1, 'toDate', 0, 0, 0, "", 1, 1, 1)."\n\t\t\t";;
+    $Nav .= $langs->trans("GoTo").': '.$form->selectDate(-1, 'toDate', 0, 0, 0, "", 1, 1)."\n\t\t\t";;
     $Nav .= '<input type = "submit" value = "Go" /></form>'."\n\t\t</th>\n\t\t<th>\n\t\t\t";
     $Nav .= '<a href="?startDate='.getStartDate($this->date_start, 1).$tail;
     if ($optioncss != '') $Nav .= '&amp;optioncss='.$optioncss;
@@ -1188,8 +1188,8 @@ public function getHTMLNavigation($optioncss, $token, $ajax = false)
         $this->note = '';
         if ($test) {
             $this->userId = 1;
-            $this->date_start = srttotime('this '.FIRST_DAY_OF_THE_WEEK, dol_time());
-            $this->date_end = srttotime('next '.FIRST_DAY_OF_THE_WEEK, dol_time())-1;
+            $this->date_start = strtotime('this '.FIRST_DAY_OF_THE_WEEK, dol_now());
+            $this->date_end = strtotime('next '.FIRST_DAY_OF_THE_WEEK, dol_now())-1;
             $this->task = 1;
             $this->note = 'this is a test usertasktime';
         }

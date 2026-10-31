@@ -29,8 +29,8 @@ require_once 'core/lib/timesheet.lib.php';
 require_once 'class/AttendanceEvent.class.php';
 require_once 'class/TimesheetTask.class.php';
 require_once 'core/lib/generic.lib.php';
-$admin = $user->admin || $user->rights->timesheet->attendance->admin;
-if (!$user->rights->timesheet->attendance->user && !$admin) {
+$admin = $user->admin || $user->hasRight('timesheet', 'attendance', 'admin');
+if (!$user->hasRight('timesheet', 'attendance', 'user') && !$admin) {
     $accessforbidden = accessforbidden("You don't have the attendance/chrono user or admin right");
 }
 $token = GETPOST('token', 'alpha');
@@ -38,7 +38,7 @@ $action = GETPOST('action', 'alpha');
 $project = GETPOST('project', 'int');
 $task = GETPOST('taskid', 'int');
 $customer = GETPOST('customer', 'int');
-$json = GETPOST('json', 'json');
+$json = GETPOST('json', 'restricthtml');
 $today = time();
 // Load traductions files requiredby by page
 //$langs->load("companies");
