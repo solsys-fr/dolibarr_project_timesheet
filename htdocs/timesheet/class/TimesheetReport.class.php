@@ -260,10 +260,11 @@ class TimesheetReport
             $first = false;
         }
         if (is_array($this->taskarray) && count($this->taskarray)>1) {
-            $sql .= ($first?'':'AND ').'tsk.rowid in ('.explode($this->taskarray, ', ').') ';
+            $sql .= ($first?'':'AND ').'tsk.rowid in ('.implode(', ', array_map('intval', $this->taskarray)).') ';
         }
         if ($this->invoiceableOnly == 1) {
-            $sql .= ($first?'':'AND ').'tske.invoiceable = \'1\'';
+            $sql .= ($first?'':'AND ').$INVOICABLE_SQL.' = \'1\' ';
+            $first = false;
         }
 
         $sql .= ($first?'':'AND ').' DATE(element_datehour) >= \''.$this->db->idate($this->startDate).'\'';
@@ -340,7 +341,7 @@ class TimesheetReport
                     'lastName' => trim($objusr->lastname),
                     'userLink' => $objusr->getNomUrl(0),
                     'note' =>($obj->note),
-                    'invoiceable' => (isset($obj->invoiceable) && $obj->invoiceable==1)?'1':'0',
+                    'invoiceable' => (isset($obj->invoicable) && $obj->invoicable==1)?'1':'0',
                     'invoiced' => ($obj->invoiced==1)?'1':'0',
                     'socname' => $objpjt->socid>0?($objsoc->code_client != ''? $objsoc->code_client.' - ':'').$objsoc->getNomUrl():''  
                     );
