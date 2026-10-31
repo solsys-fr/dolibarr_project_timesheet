@@ -1,4 +1,15 @@
 # dolibarr_project_timesheet changelog
+5.1.0
+ - feat: support Dolibarr 23 (tested on 23.0.4, PHP 8.3, MariaDB)
+ - fix: llx_attendance_event table not created (SQL comment), wrong foreign keys
+ - fix: menus/tabs conditions rejected by dol_eval (Timesheet top menu, whitelist and approval menus not shown)
+ - fix: chrono JSON payload stripped by GETPOST (note lost on stop), clock starting from 1970 when no event
+ - fix: Default service extrafield empty (Universal Search Filter syntax), migrated on module reactivation
+ - fix: invoiceable filter/column in reports with Dolibarr 21+
+ - fix: PHP 8 errors (srttotime, explode, undefined keys, $$tva_tx, removed properties)
+ - refactor: $user->hasRight(), selectDate(), $user->socid
+ - minimum: Dolibarr 20, PHP 7.4
+
 5.0.2
  - fix: reports errors
  - fix: monday as default start day
