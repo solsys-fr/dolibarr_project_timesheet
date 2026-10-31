@@ -96,12 +96,12 @@ $offset = $limit * $page;
 $pageprev = $page - 1;
 $pagenext = $page + 1;
 $userId = is_object($user)?$user->id:$user;// 3.5 compatibility
-$admin = $user->admin  || $user->rights->timesheet->timesheet->admin 
-    || $user->rights->timesheet->attendance->admin;
+$admin = $user->admin  || $user->hasRight('timesheet', 'timesheet', 'admin') 
+    || $user->hasRight('timesheet', 'attendance', 'admin');
 
     
-if (!$user->rights->timesheet->timesheet->user && !$admin
-    && !$user->rights->timesheet->attendance->user) {
+if (!$user->hasRight('timesheet', 'timesheet', 'user') && !$admin
+    && !$user->hasRight('timesheet', 'attendance', 'user')) {
     $accessforbidden = accessforbidden("You don't have the timesheet user or admin right");
 }
 // create object and set id or ref if provided as parameter
@@ -416,11 +416,11 @@ switch($action) {
         print '<td>'.$langs->trans('DateStart').' </td><td>';
         if ($edit == 1) {
             if ($new == 1) {
-                print $form->select_date(-1, 'Datestart');
+                print $form->selectDate(-1, 'Datestart');
             } else{
                 if ($object->date_start == '')
                 $object->date_start = -1;
-                print $form->select_date($object->date_start, 'Datestart');
+                print $form->selectDate($object->date_start, 'Datestart');
             }
         } else {
             
@@ -433,11 +433,11 @@ switch($action) {
         print '<td>'.$langs->trans('DateEnd').' </td><td>';
         if ($edit == 1) {
             if ($new == 1) {
-                print $form->select_date(-1, 'Dateend');
+                print $form->selectDate(-1, 'Dateend');
             } else{
                 if ($object->date_end == '')
                 $object->date_end = -1;
-                print $form->select_date($object->date_end, 'Dateend');
+                print $form->selectDate($object->date_end, 'Dateend');
             }
         } else {
             print dol_print_date($object->date_end, 'day');

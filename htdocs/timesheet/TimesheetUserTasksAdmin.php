@@ -35,7 +35,7 @@
 //if (! defined("NOLOGIN"))        define("NOLOGIN", '1');                                // If this page is public (can be called outside logged session)
 // Change this following line to use the correct relative path (../, ../../, etc)
 include 'core/lib/includeMain.lib.php';
-if (!$user->rights->timesheet->approval->admin && !$user->admin) {
+if (!$user->hasRight('timesheet', 'approval', 'admin') && !$user->admin) {
     $accessforbidden = accessforbidden("you need to have the approver admin rights");
 }
 require_once 'core/lib/generic.lib.php';
@@ -109,11 +109,11 @@ $pagenext = $page + 1;
 //}
 // Right Management
  /*
-if ($user->societe_id > 0 ||
-       (!$user->rights->timesheet->add && ($action == 'add' || $action = 'create')) ||
-       (!$user->rights->timesheet->view && ($action == 'list' || $action = 'view')) ||
-       (!$user->rights->timesheet->delete && ($action == 'confirm_delete')) ||
-       (!$user->rights->timesheet->edit && ($action == 'edit' || $action = 'update')))
+if ($user->socid > 0 ||
+       (!$user->hasRight('timesheet', 'add') && ($action == 'add' || $action = 'create')) ||
+       (!$user->hasRight('timesheet', 'view') && ($action == 'list' || $action = 'view')) ||
+       (!$user->hasRight('timesheet', 'delete') && ($action == 'confirm_delete')) ||
+       (!$user->hasRight('timesheet', 'edit') && ($action == 'edit' || $action = 'update')))
 {
         accessforbidden();
 }
@@ -347,9 +347,9 @@ switch($action) {
                 print '<td class = "fieldrequired">'.$langs->trans('DateStart').' </td><td>';
                 if ($edit == 1) {
                 if ($new == 1) {
-                        print $form->select_date(-1, 'startDatedate');
+                        print $form->selectDate(-1, 'startDatedate');
                 } else{
-                        print $form->select_date($object->date_start, 'startDatedate');
+                        print $form->selectDate($object->date_start, 'startDatedate');
                 }
                 } else{
                         print dol_print_date($object->date_start, 'day');
@@ -361,9 +361,9 @@ switch($action) {
                 print '<td class = "fieldrequired">'.$langs->trans('DateEnd').' </td><td>';
                 if ($edit == 1) {
                 if ($new == 1) {
-                        print $form->select_date(-1, 'dateend');
+                        print $form->selectDate(-1, 'dateend');
                 } else{
-                        print $form->select_date($object->date_end, 'dateend');
+                        print $form->selectDate($object->date_end, 'dateend');
                 }
                 } else{
                         print dol_print_date($object->date_end, 'day');
@@ -490,7 +490,7 @@ switch($action) {
         print '</table>';
         print '</div>';
         $modulepart = 'timesheet';
-        $permission = 1;//$user->rights->timesheet->add;
+        $permission = 1;//$user->hasRight('timesheet', 'add');
         $param = '&id='.$object->id;
         include_once DOL_DOCUMENT_ROOT . '/core/tpl/document_actions_post_headers.tpl.php';
         break;

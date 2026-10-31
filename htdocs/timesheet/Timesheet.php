@@ -60,8 +60,8 @@ $submitted_next = GETPOST('submit_next', 'alpha');
 $saved_next = GETPOST('save_next', 'alpha');
 $tsUserId = GETPOST('tsUserId', 'int');
 
-$admin = $user->admin || $user->rights->timesheet->timesheet->admin;
-if (!$user->rights->timesheet->timesheet->user && !$admin) {
+$admin = $user->admin || $user->hasRight('timesheet', 'timesheet', 'admin');
+if (!$user->hasRight('timesheet', 'timesheet', 'user') && !$admin) {
     $accessforbidden = accessforbidden("You don't have the timesheet user or admin right");
 }
 
@@ -106,7 +106,7 @@ $id = GETPOST('id', 'int');
 $action = GETPOST('action', 'alpha');
 $myparam = GETPOST('myparam', 'alpha');
 // Protection if external user
-if ($user->societe_id > 0) {
+if ($user->socid > 0) {
         //accessforbidden();
 }
 */
@@ -258,7 +258,7 @@ print $Form;
 if (getConf('TIMESHEET_ADD_DOCS') == 1) {
         $object = $task_timesheet;
         $modulepart = 'timesheet';
-        $permission = 1;//$user->rights->timesheet->add;
+        $permission = 1;//$user->hasRight('timesheet', 'add');
         $filearray = dol_dir_list($upload_dir, 'files', 0, '', '\.meta$', $sortfield, 
             (strtolower($sortorder) == 'desc'?SORT_DESC:SORT_ASC), 1);
         //$param = 'action = submitfile&id='.$object->id;

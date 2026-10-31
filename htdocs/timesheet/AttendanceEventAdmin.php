@@ -41,7 +41,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
-$admin = $user->rights->timesheet->attendance->admin || $user->admin;
+$admin = $user->hasRight('timesheet', 'attendance', 'admin') || $user->admin;
 if (!$admin) {
     $accessforbidden = accessforbidden("You don't have the attendance admin right");
 }
@@ -99,11 +99,11 @@ $pagenext = $page + 1;
 //}
 // Right Management
  /*
-if ($user->societe_id > 0 ||
-       (!$user->rights->timesheet->add && ($action == 'add' || $action = 'create')) ||
-       (!$user->rights->timesheet->view && ($action == 'list' || $action = 'view')) ||
-       (!$user->rights->timesheet->delete && ($action == 'confirm_delete')) ||
-       (!$user->rights->timesheet->edit && ($action == 'edit' || $action = 'update')))
+if ($user->socid > 0 ||
+       (!$user->hasRight('timesheet', 'add') && ($action == 'add' || $action = 'create')) ||
+       (!$user->hasRight('timesheet', 'view') && ($action == 'list' || $action = 'view')) ||
+       (!$user->hasRight('timesheet', 'delete') && ($action == 'confirm_delete')) ||
+       (!$user->hasRight('timesheet', 'edit') && ($action == 'edit' || $action = 'update')))
 {
         accessforbidden();
 }
@@ -346,7 +346,7 @@ if (getConf('MAIN_DISABLE_FULL_SCANLIST') != false) {
         //add
         print '<tr><td>';
         print '<input type="hidden" id="csrf-token" name="token" value="'.$token.'">';
-        print $form->select_date(time(), 'Datetimeevent');
+        print $form->selectDate(time(), 'Datetimeevent');
         print '<input type = "text" maxlength = "5" onkeypress = "return regexEvent(this,event,\'timeChar\')"'
             .' name = "DatetimeeventHour" value = "'.date('H:m').'"/>';
         print '</td><td>';

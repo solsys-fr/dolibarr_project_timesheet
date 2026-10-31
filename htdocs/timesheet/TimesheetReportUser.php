@@ -38,8 +38,8 @@ $exportFriendly = GETPOST('exportFriendly', 'alpha');
 if (empty($userIdSelected))$userIdSelected = $userid;
 $exportfriendly = GETPOST('exportfriendly', 'alpha');
 $optioncss = GETPOST('optioncss', 'alpha');
-$admin = $user->admin || $user->rights->timesheet->report->admin || $user->rights->timesheet->timesheet->admin;
-if (!$user->rights->timesheet->report->user && !$admin) {
+$admin = $user->admin || $user->hasRight('timesheet', 'report', 'admin') || $user->hasRight('timesheet', 'timesheet', 'admin');
+if (!$user->hasRight('timesheet', 'report', 'user') && !$admin) {
     $accessforbidden = accessforbidden("You don't have the report user or admin right");
 }
 // Load translation files required by the page
@@ -198,9 +198,9 @@ if (!empty($userIdSelected)
     }
 }
 
-$form_output .= '<td>'.$form->select_date($dateStart, 'startDate', 0, 0, 0, "", 1, 1, 1)."</td>";
+$form_output .= '<td>'.$form->selectDate($dateStart, 'startDate', 0, 0, 0, "", 1, 1)."</td>";
 // select end date
-$form_output .= '<td>'.$form->select_date($dateEnd, 'dateEnd', 0, 0, 0, "", 1, 1, 1)."</td>";
+$form_output .= '<td>'.$form->selectDate($dateEnd, 'dateEnd', 0, 0, 0, "", 1, 1)."</td>";
 //$form_output .= '<td>'.$htmlother->select_month($month, 'month').' - '.$htmlother->selectyear($year, 'year', 0, 10, 3).' </td>';
 // Select mode
 $form_output .= '<td><input type = "radio" name = "mode" value = "PTD" '.($mode == 'PTD'?'checked':'');

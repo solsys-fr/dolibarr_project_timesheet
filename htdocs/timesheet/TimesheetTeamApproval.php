@@ -29,8 +29,8 @@ if ($apflows[1] == 0 && $role_key!== false) {
 require_once 'core/lib/timesheet.lib.php';
 require_once 'core/lib/generic.lib.php';
 require_once 'class/TimesheetUserTasks.class.php';
-$admin = $user->admin || $user->rights->timesheet->approval->admin;
-if (!$user->rights->timesheet->approval->team && !$admin) {
+$admin = $user->admin || $user->hasRight('timesheet', 'approval', 'admin');
+if (!$user->hasRight('timesheet', 'approval', 'team') && !$admin) {
     $accessforbidden = accessforbidden("you need to have the team or admin approver rights");
 }
 //$userId = GETPOST('userid');
@@ -205,7 +205,7 @@ if (is_object($firstTimesheetUser)) {
                     include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
                     $object = $TTU;
                     $modulepart = 'timesheet';
-                    $permission = 1;//$user->rights->timesheet->add;
+                    $permission = 1;//$user->hasRight('timesheet', 'add');
                     $ref = dol_sanitizeFileName($object->ref);
                     $upload_dir = $conf->timesheet->dir_output.'/users/'
                         .get_exdir($object->id, 2, 0, 0, $object, 'timesheet').$ref;

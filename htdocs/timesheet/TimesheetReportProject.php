@@ -49,9 +49,9 @@ if (empty($mode)){
     $ungroup = getConf('TIMESHEET_REPORT_UNGROUP');
     $invoicedCol = getConf('TIMESHEET_REPORT_INVOICED_COL');
 }
-$admin = $user->rights->projet->all->lire || $user->rights->projet->all->creer
-    || $user->rights->timesheet->report->admin;
-    if (!$user->rights->timesheet->report->project && !$admin) {
+$admin = $user->hasRight('projet', 'all', 'lire') || $user->hasRight('projet', 'all', 'creer')
+    || $user->hasRight('timesheet', 'report', 'admin');
+    if (!$user->hasRight('timesheet', 'report', 'project') && !$admin) {
         $accessforbidden = accessforbidden("You don't have the report projet or admin right");
     }
 
@@ -262,9 +262,9 @@ if($hidetab == 1){
 }
 //}
 // select start date
-$form_output .= '<td>'.$form->select_date($dateStart, 'startDate', 0, 0, 0, "", 1, 1, 1)."</td>";
+$form_output .= '<td>'.$form->selectDate($dateStart, 'startDate', 0, 0, 0, "", 1, 1)."</td>";
 // select end date
-$form_output .= '<td>'.$form->select_date($dateEnd, 'dateEnd', 0, 0, 0, "", 1, 1, 1)."</td>";
+$form_output .= '<td>'.$form->selectDate($dateEnd, 'dateEnd', 0, 0, 0, "", 1, 1)."</td>";
 //$form_output .= '<td> '.$htmlother->select_month($month, 'month').' - '.$htmlother->selectyear($year, 'year', 0, 10, 3)
 // Select mode
 $form_output .= '<td><input type = "radio" name = "mode" value = "UTD" '.($mode == 'UTD'?'checked':'');
@@ -296,7 +296,7 @@ $form_output .= (($ungroup == 1)?'checked>':'>').$langs->trans('reportUngroup').
  //submit
  $model = getConf('TIMESHEET_EXPORT_FORMAT');
  $form_output .= '<input class = "butAction" type = "submit" value = "'.$langs->trans('getReport').'">';
-if (!empty($querryRes) && isset($user->rights->facture) && $user->rights->facture->creer)
+if (!empty($querryRes) && $user->hasRight('facture', 'creer'))
         $form_output .= '<a class = "butAction" href = "TimesheetProjectInvoice.php?step=0&startDate='
             .dol_print_date($dateStart, 'dayxcard').'&invoicabletaskOnly='
             .$invoicabletaskOnly.'&dateEnd='.dol_print_date($dateEnd, 'dayxcard')
